@@ -12,7 +12,6 @@ A Laravel-based RESTful API for managing orders and payments with an extensible 
 ## Installation
 
 1. Clone the repository:
-cd ~/Downloads/order-payment-api
 
 2. Install dependencies:
 composer install
