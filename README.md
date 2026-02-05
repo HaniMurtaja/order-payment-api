@@ -44,8 +44,8 @@ POST /api/auth/register
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "john@example.com",
+    "name": "Hany Murtaja",
+    "email": "mortajahany@gmail.com",
     "password": "password123",
     "password_confirmation": "password123"
 }
@@ -54,7 +54,7 @@ POST /api/auth/login
 Content-Type: application/json
 
 {
-    "email": "john@example.com",
+    "email": "mortajahany@gmail.com",
     "password": "password123"
 }
 
