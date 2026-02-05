@@ -147,7 +147,7 @@ class StripeGateway implements PaymentGatewayInterface
 {
     public function processPayment(float $amount, array $data): array
     {
-        // Implement your payment processing logic
+       
         return [
             'success' => true,
             'transaction_id' => 'STRIPE_' . uniqid(),
@@ -161,11 +161,10 @@ class StripeGateway implements PaymentGatewayInterface
         return 'stripe';
     }
 }
-```
 
 2. Register the gateway in `PaymentGatewayManager`:
 
-```php
+php
 // In app/Services/PaymentGateways/PaymentGatewayManager.php
 
 protected function registerDefaultGateways(): void
@@ -174,147 +173,52 @@ protected function registerDefaultGateways(): void
     $this->register('paypal', new PayPalGateway());
     $this->register('stripe', new StripeGateway()); // Add this line
 }
-```
+
 
 3. Update validation rules in `PaymentController`:
 
-```php
+php
 // In app/Http/Controllers/Api/PaymentController.php
 
 'payment_method' => 'required|string|in:credit_card,paypal,stripe',
-```
 
-That's it! The new gateway is now integrated.
+
+
 
 ### Gateway Configuration
 
-Gateway-specific configurations (API keys, secrets) can be stored in `.env`:
-
-```env
+env
 CREDIT_CARD_API_KEY=your_key
 PAYPAL_CLIENT_ID=your_client_id
 STRIPE_SECRET_KEY=your_secret_key
-```
 
-Access these in your gateway classes using `config()` or `env()` helpers.
-
-## Business Rules
-
-1. **Order Deletion**: Orders can only be deleted if they have no associated payments
-2. **Payment Processing**: Payments can only be processed for orders with status `confirmed`
-3. **Order Status**: Valid statuses are `pending`, `confirmed`, `cancelled`
-4. **Payment Status**: Valid statuses are `pending`, `successful`, `failed`
-5. **Payment Methods**: Currently supported: `credit_card`, `paypal`
 
 ## Testing
 
-Run the test suite:
-
-```bash
-php artisan test
-```
-
-Or run specific test classes:
-
-```bash
+bash
 php artisan test --filter AuthTest
 php artisan test --filter OrderTest
 php artisan test --filter PaymentTest
-```
 
-## Postman Collection
-
-Import the `postman_collection.json` file into Postman to test all endpoints.
-
-1. Open Postman
-2. Click Import
-3. Select `postman_collection.json`
-4. Set the `base_url` variable to your API URL (default: `http://localhost:8000`)
-5. Use the Login endpoint to get a token
-6. Set the `token` variable with the received token
-
-## Project Structure
-
-```
-app/
-├── Http/
-│   └── Controllers/
-│       └── Api/
-│           ├── AuthController.php
-│           ├── OrderController.php
-│           └── PaymentController.php
-├── Models/
-│   ├── Order.php
-│   ├── OrderItem.php
-│   └── Payment.php
-└── Services/
-    └── PaymentGateways/
-        ├── PaymentGatewayInterface.php
-        ├── PaymentGatewayManager.php
-        ├── CreditCardGateway.php
-        └── PayPalGateway.php
-
-database/
-├── migrations/
-│   ├── create_orders_table.php
-│   ├── create_order_items_table.php
-│   └── create_payments_table.php
-└── factories/
-    ├── OrderFactory.php
-    ├── OrderItemFactory.php
-    └── PaymentFactory.php
-
-tests/
-└── Feature/
-    ├── AuthTest.php
-    ├── OrderTest.php
-    └── PaymentTest.php
-```
 
 ## Response Format
 
 All API responses follow a consistent format:
 
-### Success Response
-```json
+Success Response
+json
 {
     "success": true,
     "message": "Operation successful",
     "data": { ... }
 }
-```
 
-### Error Response
-```json
+ Error Response
+json
 {
     "success": false,
     "message": "Error message",
     "errors": { ... }
 }
-```
 
-## HTTP Status Codes
 
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request
-- `401` - Unauthorized
-- `404` - Not Found
-- `422` - Validation Error
-- `500` - Server Error
-
-## Security
-
-- All API endpoints (except auth) require JWT authentication
-- Passwords are hashed using bcrypt
-- Input validation on all endpoints
-- SQL injection protection via Eloquent ORM
-- XSS protection via Laravel's built-in features
-
-## License
-
-MIT License
-
-## Author
-
-Built with Laravel best practices and clean code principles.
